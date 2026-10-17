@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Schools Hub — school admin dashboard">
+    <title>Schools Hub · Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=1.0.0">
+</head>
+<body>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="side-menu" id="sideMenu" aria-label="Main navigation">
+        <div class="brand-name">
+            <div class="brand-logo" aria-hidden="true">S</div>
+            <h1>Schools<span>Hub</span></h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li class="nav-item active" data-view="dashboard" role="button" tabindex="0">
+                    <img src="assets/dashboard.png" alt=""><span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-view="students" role="button" tabindex="0">
+                    <img src="assets/read.png" alt=""><span>Students</span>
+                    <span class="side-badge" id="studentCountBadge">0</span>
+                </li>
+                <li class="nav-item" data-view="teachers" role="button" tabindex="0">
+                    <img src="assets/teach.png" alt=""><span>Teachers</span>
+                </li>
+                <li class="nav-item" data-view="income" role="button" tabindex="0">
+                    <img src="assets/income.png" alt=""><span>Income</span>
+                </li>
+                <li class="nav-item" data-view="help" role="button" tabindex="0">
+                    <img src="assets/question.png" alt=""><span>Help</span>
+                </li>
+                <li class="nav-item" data-view="settings" role="button" tabindex="0">
+                    <img src="assets/setting.png" alt=""><span>Settings</span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="side-footer">
+            <div class="side-user">
+                <img src="assets/user.png" alt="Admin avatar">
+                <div class="side-user-info">
+                    <strong>Eric N.</strong>
+                    <span>Super Admin</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="container">
+        <header class="header">
+            <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="search">
+                <img src="assets/search.png" alt="" aria-hidden="true">
+                <input type="text" id="globalSearch" placeholder="Search students, teachers, payments…"
+                       aria-label="Search" autocomplete="off">
+                <kbd>/</kbd>
+            </div>
+
+            <div class="user">
+                <button class="btn" id="addNewBtn">+ Add New</button>
+
+                <div class="notif-wrap">
+                    <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+                        <img src="assets/notificacations.png" alt="">
+                        <span class="notif-dot" id="notifDot">3</span>
+                    </button>
+                    <div class="dropdown notif-dropdown" id="notifDropdown" hidden>
+                        <div class="dropdown-head">
+                            <h4>Notifications</h4>
+                            <button class="link-btn" id="clearNotifs">Mark all read</button>
+                        </div>
+                        <ul id="notifList"></ul>
+                    </div>
+                </div>
+
+                <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+                    <span class="theme-icon" id="themeIcon">🌙</span>
+                </button>
+
+                <div class="img-case" title="Eric N. — Super Admin">
+                    <img src="assets/user.png" alt="Profile">
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+
+            <!-- ===================== DASHBOARD VIEW ===================== -->
+            <section class="view" id="view-dashboard">
+                <div class="page-head">
+                    <div>
+                        <h2>Overview</h2>
+                        <p class="muted" id="todayDate"></p>
+                    </div>
+                    <select id="termSelect" class="select" aria-label="Select term">
+                        <option value="spring">Spring Term</option>
+                        <option value="fall">Fall Term</option>
+                        <option value="summer">Summer Term</option>
+                    </select>
+                </div>
+
+                <div class="cards" id="statCards"></div>
+
+                <div class="charts-row">
+                    <div class="panel chart-panel">
+                        <div class="panel-head">
+                            <h3>Income Trend</h3>
+                            <span class="chip chip-rose" id="incomeDelta"></span>
+                        </div>
+                        <div class="chart-holder" id="incomeChart"></div>
+                    </div>
+                    <div class="panel chart-panel">
+                        <div class="panel-head">
+                            <h3>Students per School</h3>
+                        </div>
+                        <div class="donut-row">
+                            <div class="donut-holder" id="schoolChart"></div>
+                            <ul class="donut-legend" id="schoolLegend"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-2">
+                    <div class="panel table-panel">
+                        <div class="panel-head">
+                            <h3>Recent Payments</h3>
+                            <button class="link-btn" data-goto="income">View All →</button>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="data-table" id="recentPaymentsTable">
+                                <thead>
+                                    <tr><th>Name</th><th>School</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel table-panel">
+                        <div class="panel-head">
+                            <h3>New Students</h3>
+                            <button class="link-btn" data-goto="students">View All →</button>
+                        </div>
+                        <ul class="new-students-list" id="newStudentsList"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== STUDENTS VIEW ===================== -->
+            <section class="view" id="view-students" hidden>
+                <div class="page-head">
+                    <div>
+                        <h2>Students</h2>
+                        <p class="muted" id="studentsSummary"></p>
+                    </div>
+                    <button class="btn" id="addStudentBtn">+ Add Student</button>
+                </div>
+                <div class="panel">
+                    <div class="panel-head table-tools">
+                        <div class="filter-chips" id="studentFilters">
+                            <button class="chip active" data-filter="all">All</button>
+                            <button class="chip" data-filter="Active">Active</button>
+                            <button class="chip" data-filter="Pending">Pending</button>
+                            <button class="chip" data-filter="Inactive">Inactive</button>
+                        </div>
+                        <span class="muted" id="studentVisibleCount"></span>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="data-table" id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>School</th>
+                                    <th>Grade</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== TEACHERS VIEW ===================== -->
+            <section class="view" id="view-teachers" hidden>
+                <div class="page-head">
+                    <div>
+                        <h2>Teachers</h2>
+                        <p class="muted" id="teachersSummary"></p>
+                    </div>
+                </div>
+                <div class="teacher-grid" id="teacherGrid"></div>
+            </section>
+
+            <!-- ===================== INCOME VIEW ===================== -->
+            <section class="view" id="view-income" hidden>
+                <div class="page-head">
+                    <div>
+                        <h2>Income</h2>
+                        <p class="muted">Fees collected across all schools</p>
+                    </div>
+                </div>
+                <div class="mini-stats" id="incomeMiniStats"></div>
+                <div class="panel">
+                    <div class="panel-head"><h3>Monthly Collections</h3></div>
+                    <div class="chart-holder tall" id="incomeChartFull"></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-head"><h3>All Payments</h3></div>
+                    <div class="table-scroll">
+                        <table class="data-table" id="paymentsTable">
+                            <thead>
+                                <tr><th>Name</th><th>School</th><th>Amount</th><th>Date</th><th>Status</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================== HELP VIEW ===================== -->
+            <section class="view" id="view-help" hidden>
+                <div class="page-head">
+                    <div>
+                        <h2>Help &amp; Support</h2>
+                        <p class="muted">Frequently asked questions</p>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="accordion" id="faqAccordion"></div>
+                </div>
+            </section>
+
+            <!-- ===================== SETTINGS VIEW ===================== -->
+            <section class="view" id="view-settings" hidden>
+                <div class="page-head">
+                    <div>
+                        <h2>Settings</h2>
+                        <p class="muted">Personalize your dashboard</p>
+                    </div>
+                </div>
+                <div class="panel settings-panel">
+                    <div class="setting-row">
+                        <div>
+                            <strong>Dark mode</strong>
+                            <p class="muted">Switch between light and dark themes</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Compact tables</strong>
+                            <p class="muted">Show more rows per screen</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="compactSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Reset demo data</strong>
+                            <p class="muted">Restore the original sample records and clear your changes</p>
+                        </div>
+                        <button class="btn btn-outline" id="resetDataBtn">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===================== MODAL ===================== -->
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-head">
+                <h3 id="modalTitle">Add Student</h3>
+                <button class="icon-btn" id="modalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="studentForm" novalidate>
+                <div class="form-row">
+                    <label for="fName">Full name</label>
+                    <input type="text" id="fName" required placeholder="e.g. Jane Cooper">
+                    <small class="form-error" id="nameError">Please enter a name.</small>
+                </div>
+                <div class="form-row">
+                    <label for="fSchool">School</label>
+                    <select id="fSchool" required></select>
+                </div>
+                <div class="form-row two-col">
+                    <div>
+                        <label for="fGrade">Grade</label>
+                        <select id="fGrade"></select>
+                    </div>
+                    <div>
+                        <label for="fStatus">Status</label>
+                        <select id="fStatus">
+                            <option>Active</option>
+                            <option>Pending</option>
+                            <option>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="modalCancel">Cancel</button>
+                    <button type="submit" class="btn">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+    <script src="./app.js?v=1.0.1"></script>
+</body>
+</html>
